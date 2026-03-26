@@ -251,9 +251,69 @@
             .options-grid { grid-template-columns: 1fr; }
             .step-nav { flex-wrap: wrap; }
             .step-btn { min-width: 50%; }
+            .draw-card { width: 110px; height: 158px; }
+            .draw-card-front .card-prompt { font-size: 0.72rem; }
         }
 
-        @media (prefers-reduced-motion: reduce) {
+        /* Card draw */
+        .card-deck {
+            display: flex; gap: 0.75rem; justify-content: center;
+            flex-wrap: wrap; margin: 1.5rem 0;
+        }
+        .draw-card {
+            width: 128px; height: 182px; perspective: 700px;
+            cursor: pointer; flex-shrink: 0;
+        }
+        .draw-card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .draw-card.flipped .draw-card-inner { transform: rotateY(180deg); }
+        .draw-card-back, .draw-card-front {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; text-align: center;
+        }
+        .draw-card-back {
+            background: linear-gradient(145deg, #F0E6D8, #E8DACA); border: 2px solid var(--warm);
+            flex-direction: column; gap: 0.4rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .draw-card-back .card-glyph {
+            font-size: 1.4rem; color: var(--warm); opacity: 0.7; line-height: 1;
+        }
+        .draw-card-back .card-label {
+            font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--warm); opacity: 0.7;
+        }
+        .draw-card-front {
+            background: var(--surface); border: 1px solid var(--border);
+            transform: rotateY(180deg); padding: 0.9rem;
+            flex-direction: column; gap: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .draw-card-front .card-prompt {
+            font-size: 0.78rem; font-weight: 500; color: var(--text);
+            line-height: 1.6;
+        }
+        .draw-card-front .card-num {
+            font-size: 0.6rem; font-weight: 600; color: var(--text-3);
+            letter-spacing: 0.1em;
+        }
+        .reshuffle-wrap {
+            text-align: center; margin-top: 1rem;
+        }
+        .reshuffle-btn {
+            background: none; border: 1px solid var(--border); border-radius: 6px;
+            font-family: inherit; font-size: 0.8rem; font-weight: 500;
+            color: var(--text-2); padding: 0.5rem 1.25rem; cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .reshuffle-btn:hover { background: var(--bg); border-color: var(--text-3); }
+
+        @media (max-width: 600px) {
             * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
     </style>
@@ -537,19 +597,43 @@
             <hr class="divider">
 
             <div class="section-label">Discussion</div>
-            <div class="prompt-list">
-                <div class="prompt-item">
-                    <div class="prompt-label">Opening</div>
-                    <div class="prompt-text">Which card landed most? What made it recognizable?</div>
+            <h3>Draw a prompt</h3>
+            <p class="body-text" style="margin-bottom: 0.25rem;">Tap a card to flip it. Use whatever comes up, or draw another.</p>
+
+            <div class="card-deck" id="freedom-deck">
+                <div class="draw-card" onclick="flipCard(this)">
+                    <div class="draw-card-inner">
+                        <div class="draw-card-back"><span class="card-glyph">&#9670;</span><span class="card-label">Draw</span></div>
+                        <div class="draw-card-front"><span class="card-num"></span><span class="card-prompt"></span></div>
+                    </div>
                 </div>
-                <div class="prompt-item">
-                    <div class="prompt-label">Deeper</div>
-                    <div class="prompt-text">What would you have to give up, or give back, if you fully accepted your freedom in recovery?</div>
+                <div class="draw-card" onclick="flipCard(this)">
+                    <div class="draw-card-inner">
+                        <div class="draw-card-back"><span class="card-glyph">&#9670;</span><span class="card-label">Draw</span></div>
+                        <div class="draw-card-front"><span class="card-num"></span><span class="card-prompt"></span></div>
+                    </div>
                 </div>
-                <div class="prompt-item">
-                    <div class="prompt-label">Reflection</div>
-                    <div class="prompt-text">Is there a difference between "I can't" and "I won't" in your life right now? What does it cost to keep the distinction blurry?</div>
+                <div class="draw-card" onclick="flipCard(this)">
+                    <div class="draw-card-inner">
+                        <div class="draw-card-back"><span class="card-glyph">&#9670;</span><span class="card-label">Draw</span></div>
+                        <div class="draw-card-front"><span class="card-num"></span><span class="card-prompt"></span></div>
+                    </div>
                 </div>
+                <div class="draw-card" onclick="flipCard(this)">
+                    <div class="draw-card-inner">
+                        <div class="draw-card-back"><span class="card-glyph">&#9670;</span><span class="card-label">Draw</span></div>
+                        <div class="draw-card-front"><span class="card-num"></span><span class="card-prompt"></span></div>
+                    </div>
+                </div>
+                <div class="draw-card" onclick="flipCard(this)">
+                    <div class="draw-card-inner">
+                        <div class="draw-card-back"><span class="card-glyph">&#9670;</span><span class="card-label">Draw</span></div>
+                        <div class="draw-card-front"><span class="card-num"></span><span class="card-prompt"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="reshuffle-wrap">
+                <button class="reshuffle-btn" id="freedom-reshuffle" style="display:none;" onclick="reshuffleFreedom()">Reshuffle</button>
             </div>
 
             <div class="page-nav">
@@ -1187,6 +1271,61 @@
         el.closest('.options-grid').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
         el.classList.add('selected');
     }
+
+    /* Card draw */
+    const freedomPrompts = [
+        "Which domain from the choice audit landed hardest? What made it recognizable?",
+        "What would you have to give up if you fully accepted your freedom in recovery?",
+        "Is there a difference between \"I can't\" and \"I won't\" in your life right now?",
+        "What's one choice you've been outsourcing to your disorder?",
+        "If you couldn't blame anyone or anything for where you are, what would change?",
+        "What would you do differently tomorrow if you believed you were free to choose?",
+        "Where in your life are you waiting for permission that no one else can give?",
+        "What's one thing you treat as mandatory that's actually optional?",
+        "Sartre said we're \"condemned to be free.\" Does that feel like a gift or a burden today?",
+        "What's the smallest choice you could reclaim this week?",
+        "Who benefits when you act as if you have no choice?",
+        "What would bad faith look like in your life this morning?"
+    ];
+
+    let freedomPool = [];
+
+    function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function dealFreedomCards() {
+        freedomPool = shuffleArray(freedomPrompts).slice(0, 5);
+        const cards = document.querySelectorAll('#freedom-deck .draw-card');
+        cards.forEach((card, i) => {
+            card.classList.remove('flipped');
+            card.querySelector('.card-prompt').textContent = freedomPool[i];
+            card.querySelector('.card-num').textContent = '';
+        });
+        document.getElementById('freedom-reshuffle').style.display = 'none';
+    }
+
+    function flipCard(el) {
+        if (el.classList.contains('flipped')) return;
+        el.classList.add('flipped');
+        const deck = el.closest('.card-deck');
+        const all = deck.querySelectorAll('.draw-card');
+        const flipped = deck.querySelectorAll('.draw-card.flipped');
+        if (flipped.length === all.length) {
+            document.getElementById('freedom-reshuffle').style.display = 'inline-block';
+        }
+    }
+
+    function reshuffleFreedom() {
+        dealFreedomCards();
+    }
+
+    dealFreedomCards();
 </script>
 </body>
 </html>
